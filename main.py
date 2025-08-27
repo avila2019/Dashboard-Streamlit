@@ -10,7 +10,7 @@ st.title("📊 Conjunto de dados sobre o impacto do uso de smartphones e do víc
 st.write("### Prévia dos Dados do Dataset")
 st.dataframe(df.head())
 
-
+st.write("### Distribuição do Uso de Smartphones pelas Idades")
 # Histograma da Idade 
 if "Age" in df.columns:
     fig1 = px.histogram(
@@ -19,7 +19,7 @@ if "Age" in df.columns:
         nbins=10,
         color="Gender",  # cor por gênero
         barmode="overlay",
-        title="Distribuição do Uso de Smartphones pelas Idades"
+        #title="Distribuição do Uso de Smartphones pelas Idades"
     )
     fig1.update_layout(
         xaxis_title="Idade",
@@ -29,7 +29,7 @@ if "Age" in df.columns:
     )
     st.plotly_chart(fig1, use_container_width=True)    
 
-
+st.write("### Uso Diário de horas no Smartphone pelo Gênero")
 #  Gráfico 2: Uso de telefone por gênero
 if "Gender" in df.columns and "Daily_Usage_Hours" in df.columns:
     fig2 = px.box(
@@ -38,7 +38,7 @@ if "Gender" in df.columns and "Daily_Usage_Hours" in df.columns:
         y="Daily_Usage_Hours",
         color="Gender",  # cores diferentes por gênero
         points="all",  # mostra os pontos individuais além da caixa
-        title="Uso Diário de horas no Smartphone pelo Gênero"
+        #title="Uso Diário de horas no Smartphone pelo Gênero"
     )
     fig2.update_layout(
         xaxis_title="Gênero",
@@ -48,7 +48,7 @@ if "Gender" in df.columns and "Daily_Usage_Hours" in df.columns:
     )
     st.plotly_chart(fig2, use_container_width=True)
 
-
+st.write("### Idade x Tempo de Uso do Telefone")
 # --- Gráfico 3: Dispersão entre idade e tempo de uso do telefone ---
 if "Age" in df.columns and "Daily_Usage_Hours" in df.columns:
     fig3 = px.scatter(
@@ -58,7 +58,7 @@ if "Age" in df.columns and "Daily_Usage_Hours" in df.columns:
         color="Gender" if "Gender" in df.columns else None,  # cor por gênero, se existir
         size="Daily_Usage_Hours",  # bolha proporcional ao tempo de uso
         hover_data=df.columns,  # mostra todas as colunas no hover
-        title="Idade x Tempo de Uso do Telefone",
+        #title="Idade x Tempo de Uso do Telefone",
         trendline="ols",  # adiciona linha de regressão (se statsmodels estiver instalado)
         opacity=0.7
     )
@@ -71,7 +71,7 @@ if "Age" in df.columns and "Daily_Usage_Hours" in df.columns:
     st.plotly_chart(fig3, use_container_width=True)    
 
 
-
+    st.write("### Relação entre Horas de Uso Diário do Telefone e Horas de Sono")
     # Gráfico de dispersão: Horas de uso do telefone vs Horas de sono
 if "Daily_Usage_Hours" in df.columns and "Daily_Usage_Hours" in df.columns:
     fig = px.scatter(
@@ -81,12 +81,12 @@ if "Daily_Usage_Hours" in df.columns and "Daily_Usage_Hours" in df.columns:
         color=None,
         size="Daily_Usage_Hours",
         trendline="ols",  # Adiciona linha de tendência
-        title="Relação entre Horas de Uso Diário do Telefone e Horas de Sono",
+        #title="Relação entre Horas de Uso Diário do Telefone e Horas de Sono",
         labels={"Daily_Usage_Hours": "Horas de Uso Diário do Telefone", "Sleep_Hours": "Horas de Sono"}
     )
     st.plotly_chart(fig)
 
-st.write("### Análise das crianças em relação ao Nível de Ansiedade, Controle parental,Autoestima e Nível de Depressão")
+st.write("### Análise das crianças que utilizam Smartphones, Relação ao Nível de Ansiedade, Controle Parental,Autoestima e Nível de Depressão")
 # Indicadores Psicológicos das Crianças
 # Selecionando uma criança para análise individual
 opcao = st.selectbox("Selecione uma criança para visualizar:", df.index)
