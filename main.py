@@ -69,3 +69,46 @@ if "Age" in df.columns and "Daily_Usage_Hours" in df.columns:
         legend_title="Gênero"
     )
     st.plotly_chart(fig3, use_container_width=True)    
+
+
+
+    # Gráfico de dispersão: Horas de uso do telefone vs Horas de sono
+if "Daily_Usage_Hours" in df.columns and "Daily_Usage_Hours" in df.columns:
+    fig = px.scatter(
+        df,
+        x="Daily_Usage_Hours",
+        y="Sleep_Hours",
+        color=None,
+        size="Daily_Usage_Hours",
+        trendline="ols",  # Adiciona linha de tendência
+        title="Relação entre Horas de Uso Diário do Telefone e Horas de Sono",
+        labels={"Daily_Usage_Hours": "Horas de Uso Diário do Telefone", "Sleep_Hours": "Horas de Sono"}
+    )
+    st.plotly_chart(fig)
+
+st.write("### Análise das crianças em relação ao Nível de Ansiedade, Controle parental,Autoestima e Nível de Depressão")
+# Indicadores Psicológicos das Crianças
+# Selecionando uma criança para análise individual
+opcao = st.selectbox("Selecione uma criança para visualizar:", df.index)
+# COLOCAR O NOME DA CRIANÇA 
+
+# Pegar valores dessa linha
+dados = df.loc[opcao, ["Anxiety_Level", "Depression_Level", "Self_Esteem", "Parental_Control"]]
+
+# Criar DataFrame no formato longo para o radar
+radar_df = pd.DataFrame({
+    "Indicador": ["Nível de Ansiedade", "Nível de Depressão", "Autoestima", "Controle Parental"],
+    "Valor": dados.values
+})
+
+# Gráfico radar por nivel de ansiedade , controle parental, autoestima e nível de depressão
+fig = px.line_polar(
+    radar_df,
+    r="Valor",
+    theta="Indicador",
+    line_close=True,
+    title=f"Perfil Psicológico da Criança {opcao}",
+)
+fig.update_traces(fill="toself")
+
+st.plotly_chart(fig)    
