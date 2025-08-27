@@ -74,7 +74,7 @@ if "Age" in df.columns and "Daily_Usage_Hours" in df.columns:
     st.write("### Relação entre Horas de Uso Diário do Telefone e Horas de Sono")
     # Gráfico de dispersão: Horas de uso do telefone vs Horas de sono
 if "Daily_Usage_Hours" in df.columns and "Daily_Usage_Hours" in df.columns:
-    fig = px.scatter(
+    fig4 = px.scatter(
         df,
         x="Daily_Usage_Hours",
         y="Sleep_Hours",
@@ -84,7 +84,7 @@ if "Daily_Usage_Hours" in df.columns and "Daily_Usage_Hours" in df.columns:
         #title="Relação entre Horas de Uso Diário do Telefone e Horas de Sono",
         labels={"Daily_Usage_Hours": "Horas de Uso Diário do Telefone", "Sleep_Hours": "Horas de Sono"}
     )
-    st.plotly_chart(fig)
+    st.plotly_chart(fig4)
 
 st.write("### Análise das crianças que utilizam Smartphones, Relação ao Nível de Ansiedade, Controle Parental,Autoestima e Nível de Depressão")
 # Indicadores Psicológicos das Crianças
@@ -102,13 +102,13 @@ radar_df = pd.DataFrame({
 })
 
 # Gráfico radar por nivel de ansiedade , controle parental, autoestima e nível de depressão
-fig = px.line_polar(
+fig4 = px.line_polar(
     radar_df,
     r="Valor",
     theta="Indicador",
     line_close=True,
     title=f"Perfil Psicológico da Criança {opcao}",
 )
-fig.update_traces(fill="toself")
+fig4.update_traces(fill="toself")
 
-st.plotly_chart(fig)    
+st.plotly_chart(fig4)    
