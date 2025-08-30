@@ -10,6 +10,7 @@ st.title("📊 Conjunto de dados sobre o impacto do uso de smartphones e do víc
 st.write("### Prévia dos Dados do Dataset")
 st.dataframe(df.head())
 
+# Plot 1
 st.write("### Distribuição do Uso de Smartphones pelas Idades")
 # Histograma da Idade 
 if "Age" in df.columns:
@@ -29,6 +30,8 @@ if "Age" in df.columns:
     )
     st.plotly_chart(fig1, use_container_width=True)    
 
+
+# Plot 2
 st.write("### Uso Diário de horas no Smartphone pelo Gênero")
 #  Gráfico 2: Uso de telefone por gênero
 if "Gender" in df.columns and "Daily_Usage_Hours" in df.columns:
@@ -48,67 +51,116 @@ if "Gender" in df.columns and "Daily_Usage_Hours" in df.columns:
     )
     st.plotly_chart(fig2, use_container_width=True)
 
-st.write("### Idade x Tempo de Uso do Telefone")
-# --- Gráfico 3: Dispersão entre idade e tempo de uso do telefone ---
+
+# Plot 3
+st.write("### Relação entre Idade e Uso do Telefone")
+
 if "Age" in df.columns and "Daily_Usage_Hours" in df.columns:
     fig3 = px.scatter(
         df,
         x="Age",
         y="Daily_Usage_Hours",
-        color="Gender" if "Gender" in df.columns else None,  # cor por gênero, se existir
-        size="Daily_Usage_Hours",  # bolha proporcional ao tempo de uso
-        hover_data=df.columns,  # mostra todas as colunas no hover
-        #title="Idade x Tempo de Uso do Telefone",
-        trendline="ols",  # adiciona linha de regressão (se statsmodels estiver instalado)
-        opacity=0.7
-    )
-    fig3.update_layout(
-        xaxis_title="Idade",
-        yaxis_title="Horas de Uso Diário do Telefone",
-        plot_bgcolor="white",
-        legend_title="Gênero"
-    )
-    st.plotly_chart(fig3, use_container_width=True)    
-
-
-    st.write("### Relação entre Horas de Uso Diário do Telefone e Horas de Sono")
-    # Gráfico de dispersão: Horas de uso do telefone vs Horas de sono
-if "Daily_Usage_Hours" in df.columns and "Daily_Usage_Hours" in df.columns:
-    fig4 = px.scatter(
-        df,
-        x="Daily_Usage_Hours",
-        y="Sleep_Hours",
-        color=None,
+        color="Gender" if "Gender" in df.columns else None,
         size="Daily_Usage_Hours",
-        trendline="ols",  # Adiciona linha de tendência
-        #title="Relação entre Horas de Uso Diário do Telefone e Horas de Sono",
-        labels={"Daily_Usage_Hours": "Horas de Uso Diário do Telefone", "Sleep_Hours": "Horas de Sono"}
+        hover_data=df.columns,
+        
     )
-    st.plotly_chart(fig4)
+    st.plotly_chart(fig3, use_container_width=True)
 
-st.write("### Análise das crianças que utilizam Smartphones, Relação ao Nível de Ansiedade, Controle Parental,Autoestima e Nível de Depressão")
-# Indicadores Psicológicos das Crianças
-# Selecionando uma criança para análise individual
-opcao = st.selectbox("Selecione uma criança para visualizar:", df.index)
-# COLOCAR O NOME DA CRIANÇA 
 
-# Pegar valores dessa linha
-dados = df.loc[opcao, ["Anxiety_Level", "Depression_Level", "Self_Esteem", "Parental_Control"]]
 
-# Criar DataFrame no formato longo para o radar
-radar_df = pd.DataFrame({
-    "Indicador": ["Nível de Ansiedade", "Nível de Depressão", "Autoestima", "Controle Parental"],
-    "Valor": dados.values
-})
+# Plot 4 
+st.set_page_config(page_title="Análise Psicológica", layout="centered")
+st.write("### Análise Psicológica dos Alunos")
 
-# Gráfico radar por nivel de ansiedade , controle parental, autoestima e nível de depressão
-fig4 = px.line_polar(
-    radar_df,
-    r="Valor",
-    theta="Indicador",
-    line_close=True,
-    title=f"Perfil Psicológico da Criança {opcao}",
-)
-fig4.update_traces(fill="toself")
+# -------------------
+# Seleção do Aluno
+# -------------------
+if "Name" in df.columns:
+    aluno_sel = st.selectbox("Selecione o Aluno:", df["Name"].unique())
 
-st.plotly_chart(fig4)    
+    # Filtrar dados do aluno escolhido
+    aluno_dados = df[df["Name"] == aluno_sel].iloc[0]
+
+    # Criar dataframe com métricas
+    dados_plot = pd.DataFrame({
+        "Indicador": ["Nível de Ansiedade", "Nível de Depressão", "Autoestima", "Controle Parental"],
+        "Valor": [
+            aluno_dados["Anxiety_Level"] if "Anxiety_Level" in df.columns else None,
+            aluno_dados["Depression_Level"] if "Depression_Level" in df.columns else None,
+            aluno_dados["Self_Esteem"] if "Self_Esteem" in df.columns else None,
+            aluno_dados["Parental_Control"] if "Parental_Control" in df.columns else None
+        ]
+    })
+
+    # -------------------
+    # Gráfico Radar
+    # -------------------
+    fig4 = px.line_polar(
+        dados_plot,
+        r="Valor",
+        theta="Indicador",
+        line_close=True,
+        title=f"Perfil Psicológico do Aluno: {aluno_sel}"
+    )
+    fig4.update_traces(fill="toself")
+    st.plotly_chart(fig4, use_container_width=True)    
+
+
+
+# Plot 5
+    st.title("📊 Uso de Aplicativos por Aluno")
+
+# -------------------
+# Seleção do Aluno
+# -------------------
+if "Name" in df.columns:
+    aluno_sel = st.selectbox("Selecione o Aluno:", df["Name"].unique())
+
+    # Filtrar dados do aluno escolhido
+    aluno_dados = df[df["Name"] == aluno_sel].iloc[0]
+
+    # Criar dataframe com métricas
+    dados_plot = pd.DataFrame({
+        "Categoria": [
+            "Aplicativos Usados Diariamente",
+            "Tempo em Redes Sociais",
+            "Tempo em Jogos",
+            "Tempo em Educação"
+        ],
+        "Valor": [
+            aluno_dados["Apps_Diarios"] if "Apps_Diarios" in df.columns else None,
+            aluno_dados["Tempo_RedesSociais"] if "Tempo_RedesSociais" in df.columns else None,
+            aluno_dados["Tempo_Jogos"] if "Tempo_Jogos" in df.columns else None,
+            aluno_dados["Tempo_Educacao"] if "Tempo_Educacao" in df.columns else None
+        ]
+    })
+
+    # -------------------
+    # Gráfico Radar
+    # -------------------
+    fig = px.line_polar(
+        dados_plot,
+        r="Valor",
+        theta="Categoria",
+        line_close=True,
+        title=f"Perfil de Uso de Aplicativos: {aluno_sel}"
+    )
+    fig.update_traces(fill="toself")
+    st.plotly_chart(fig, use_container_width=True)
+
+    # -------------------
+    # Gráfico de Barras
+    # -------------------
+    fig2 = px.bar(
+        dados_plot,
+        x="Categoria",
+        y="Valor",
+        color="Categoria",
+        text="Valor",
+        title=f"Uso de Aplicativos por Categoria - {aluno_sel}"
+    )
+    fig2.update_layout(xaxis_title="Categoria", yaxis_title="Tempo / Quantidade")
+    st.plotly_chart(fig2, use_container_width=True)
+
+
